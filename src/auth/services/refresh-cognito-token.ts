@@ -1,7 +1,7 @@
 import { CognitoRefreshTokenResult } from "../types/cognito-refresh-token-result";
 
-const clientId: string = process.env.AWS_COGNITO_USER_POOLS_WEB_CLIENT_ID || "";
-const cognitoUrl: string = process.env.AWS_COGNITO_URL || "";
+const clientId: string = process.env.COGNITO_USER_POOLS_WEB_CLIENT_ID || "";
+const cognitoUrl: string = process.env.COGNITO_URL || "";
 
 export const refreshCognitoToken = async (
   refreshToken: string

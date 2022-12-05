@@ -1,7 +1,7 @@
 import { decodeProtectedHeader, importJWK, jwtVerify } from "jose";
 
-const region: string = process.env.AWS_REGION || "";
-const userPoolsId: string = process.env.AWS_COGNITO_USER_POOLS_ID || "";
+const region: string = process.env.REGION || "";
+const userPoolsId: string = process.env.COGNITO_USER_POOLS_ID || "";
 
 const cognitoIdpUrl = `https://cognito-idp.${region}.amazonaws.com`;
 
