@@ -11,6 +11,7 @@ const authenticatedPaths: string[] = ["/dashboard"];
 
 // Middleware that prevents unauthenticated users from accessing protected resources
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  console.log("Middleware start");
   const url: NextURL = request.nextUrl.clone();
 
   const signin = `${url.origin}/signin`;
@@ -22,24 +23,30 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   const cognitoToken: CognitoToken | null = getCognitoTokenFromCookie(request);
+  console.log("tokens", cognitoToken);
   if (!cognitoToken) {
     // Cookieからtokenが取得出来ないかつ、認証必須画面アクセスの場合ログイン画面へ
     if (authenticatedPaths.includes(url.pathname)) {
+      console.log("to signin");
       return NextResponse.redirect(signin);
     }
+    console.log("to next");
 
     return NextResponse.next();
   }
 
   try {
+    console.log("verify token");
     // Verify the ID token
     await verifyCognitoToken(cognitoToken.idToken);
 
     // idToken検証結果が有効(認証済)かつ認証不要画面アクセスの場合ダッシュボード画面へ
     if (unauthenticatedPaths.includes(url.pathname)) {
+      console.log("to dashboard");
       return NextResponse.redirect(dashboard);
     }
 
+    console.log("to next");
     return NextResponse.next();
   } catch (error) {
     console.error("ID Token is not valid", error);
@@ -59,6 +66,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     }
   }
 
+  console.log("verify error");
   // idToken検証がエラーだった場合ログイン画面へ
   return NextResponse.redirect(signin);
 }
